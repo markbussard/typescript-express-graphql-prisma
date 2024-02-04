@@ -1,0 +1,24 @@
+type Comment {
+  id: Cuid!
+  content: String!
+  author: User!
+  post: Post!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+input CreateCommentInput {
+  content: String!
+  postId: Cuid!
+}
+
+input UpdateCommentInput {
+  content: String!
+}
+
+extend type Mutation {
+  createComment(input: CreateCommentInput!): Comment!
+  updateComment(id: Cuid!, input: UpdateCommentInput!): Comment!
+  deleteComment(id: Cuid!): Cuid!
+}

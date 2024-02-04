@@ -1,0 +1,7 @@
+scalar DateTime
+scalar JSON
+scalar EmailAddress
+scalar Cuid
+
+type Query
+type Mutation

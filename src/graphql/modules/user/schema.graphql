@@ -1,0 +1,18 @@
+enum UserRole {
+  USER
+  ADMIN
+}
+
+type User {
+  id: Cuid!
+  email: EmailAddress!
+  role: UserRole!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+extend type Query {
+  me: User
+}

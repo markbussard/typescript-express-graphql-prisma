@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+
+  @@map("user_role")
+}
+
+model User {
+  id        String     @id @default(cuid()) @db.VarChar(25)
+  email     String     @unique @db.VarChar(255)
+  role      UserRole   @default(USER)
+  name      String     @db.VarChar(255)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  deletedAt DateTime?  @map("deleted_at")
+  bookmarks Bookmark[]
+  comments  Comment[]
+  likes     Like[]
+  Post      Post[]
+
+  @@map("user")
+}
+
+model Bookmark {
+  id        String    @id @default(cuid()) @db.VarChar(25)
+  userId    String    @map("user_id") @db.VarChar(25)
+  postId    String    @map("post_id") @db.VarChar(25)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
+  @@map("bookmark")
+}
+
+model Comment {
+  id        String    @id @default(cuid()) @db.VarChar(25)
+  authorId  String    @map("author_id") @db.VarChar(25)
+  postId    String    @map("post_id") @db.VarChar(25)
+  content   String    @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  author User @relation(fields: [authorId], references: [id])
+  post   Post @relation(fields: [postId], references: [id])
+
+  @@map("comment")
+}
+
+model Like {
+  id        String    @id @default(cuid()) @db.VarChar(25)
+  userId    String    @map("user_id") @db.VarChar(25)
+  postId    String    @map("post_id") @db.VarChar(25)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
+  @@map("like")
+}
+
+model Post {
+  id        String     @id @default(cuid()) @db.VarChar(25)
+  title     String     @db.VarChar(255)
+  content   String     @db.Text
+  authorId  String     @map("author_id") @db.VarChar(25)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  deletedAt DateTime?  @map("deleted_at")
+  Bookmark  Bookmark[]
+  Comment   Comment[]
+  Like      Like[]
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@map("post")
+}

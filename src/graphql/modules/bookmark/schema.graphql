@@ -1,0 +1,22 @@
+type Bookmark {
+  id: Cuid!
+  user: User
+  post: Post!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+input CreateBookmarkInput {
+  userId: Cuid!
+  postId: Cuid!
+}
+
+extend type Query {
+  bookmarks: [Bookmark!]
+}
+
+extend type Mutation {
+  createBookmark(input: CreateBookmarkInput!): Bookmark!
+  deleteBookmark(id: Cuid!): Cuid!
+}

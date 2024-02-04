@@ -1,0 +1,20 @@
+type Like {
+  id: Cuid!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+input CreateLikeInput {
+  postId: Cuid!
+}
+
+extend type Query {
+  likes: [Like!]
+}
+
+extend type Mutation {
+  createLike(input: CreateLikeInput!): Like!
+  deleteLike(id: Cuid!): Cuid!
+}
